@@ -11,7 +11,7 @@ def pagina_inicial():
         nome = request.form['nome']
         peso = request.form['peso']
         altura = request.form['altura']
-    
+        resultado = None
 
         erros = []
         if nome == '':
@@ -47,7 +47,9 @@ def pagina_inicial():
             else :
                 mensagem = "Abaixo do peso"
 
-            return render_template('index.html', imc = imc, mensagem = mensagem, erros = erros, nome = nome)
+          #  resultado =  {"imc" : imc, "mensagem" : mensagem, "erros" : erros, "nome" : nome}
+
+            return render_template('index.html', imc = imc, mensagem = mensagem, nome = nome)
     return render_template('index.html', erros = erros)
 
 
@@ -58,3 +60,4 @@ def contato():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
