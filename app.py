@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def pagina_inicial():
-  
+    if 
     
 
 @app.route('/equipe')
