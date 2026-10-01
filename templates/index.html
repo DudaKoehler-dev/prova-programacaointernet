@@ -26,7 +26,7 @@
         <div class="card">
             <div class="card-header">Informe seus dados</div>
             <div class="card-body">
-                <form method="post" action="/">
+                <form method="post" action="/" method="post">
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome</label>
                         <input type="text" class="form-control" id="nome" name="nome" required>
@@ -46,16 +46,26 @@
             </div>
         </div>
 
+        {%if erro %}
+        {% for erro in erros%}
+        <div class="alert alert-danger" role="alert" >
+            {{erro}}
+        </div>
+        {%endfor%}
+        {%endif%}
+
+     {%if imc %}
         <div class="card mt-4">
             <div class="card-header">Resultado</div>
             <div class="card-body">
                 <div class="alert alert-success mb-0" role="alert">
-                    <h4 class="alert-heading">Nome da pessoa</h4>
-                    <p class="mb-1">Seu IMC é <strong>00,00</strong></p>
-                    <p class="mb-0">Faixa: <strong>Nome da faixa</strong></p>
+                    <h4 class="alert-heading"> {{mensagem.nome}} </h4>
+                    <p class="mb-1">Seu IMC é <strong> {{mensagem.imc}} </strong></p>
+                    <p class="mb-0">Faixa: <strong> {{mensagem.mensagem}} </strong></p>
                 </div>
             </div>
         </div>
+    {%endif%}
     </div>
 </body>
 
