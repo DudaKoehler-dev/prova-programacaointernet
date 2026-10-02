@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        {%if erro %}
+        {%if erros %}
         {% for erro in erros%}
         <div class="alert alert-danger" role="alert" >
             {{erro}}
@@ -54,16 +54,18 @@
         {%endfor%}
         {%endif%}
 
+        {%if imc %}
         <div class="card mt-4">
             <div class="card-header">Resultado</div>
             <div class="card-body">
-                <div class="alert alert-success mb-0" role="alert">
+                <div class="alert alert-{{cor}} mb-0" role="alert">
                     <p class="alert-heading"> olá, {{nome}} </p>
-                    <p class="mb-1">Seu IMC é <strong> {{imc}} </strong></p>
+                    <p class="mb-1">Seu IMC é <strong> {{'%.2f' % imc}} </strong></p>
                     <p class="mb-0">Faixa: <strong> {{mensagem}} </strong></p>
                 </div>
             </div>
         </div>
+        {%endif%}
     </div>
 </body>
 
