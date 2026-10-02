@@ -12,10 +12,10 @@
 <body>
     <nav class="navbar navbar-expand-lg bg-primary navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="/">Calculadora de IMC</a>
+            <a class="navbar-brand" href="{{ url_for('index') }}">Calculadora de IMC</a>
             <ul class="navbar-nav ms-auto flex-row gap-3">
-                <li class="nav-item"><a class="nav-link" href="/">Calculadora</a></li>
-                <li class="nav-item"><a class="nav-link" href="/equipe">Equipe</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Calculadora</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('equipe') }}">Equipe</a></li>
             </ul>
         </div>
     </nav>
@@ -23,49 +23,43 @@
     <div class="container my-4">
         <h1 class="mb-4">Calculadora de IMC</h1>
 
+        {% for erro in erros %}
+        <div class="alert alert-danger" role="alert">{{ erro }}</div>
+        {% endfor %}
+
         <div class="card">
             <div class="card-header">Informe seus dados</div>
             <div class="card-body">
-                <form method="post" action="/" >
+                <form method="post" action="/">
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome</label>
-                        <input type="text" class="form-control" id="nome" name="nome" required>
+                        <input type="text" class="form-control" id="nome" name="nome" value="{{ nome }}" >
                     </div>
                     <div class="mb-3">
                         <label for="peso" class="form-label">Peso (kg)</label>
-                        <input type="number" class="form-control" id="peso" name="peso" step="0.01" min="1" max="300"
-                            required>
+                        <input type="number" class="form-control" id="peso" name="peso" value="{{ peso }}" step="0.01">
                     </div>
                     <div class="mb-3">
                         <label for="altura" class="form-label">Altura (m)</label>
-                        <input type="number" class="form-control" id="altura" name="altura" step="0.01" min="0.5"
-                            max="2.5" required>
+                        <input type="number" class="form-control" id="altura" name="altura" value="{{ altura }}" step="0.01">
                     </div>
                     <button type="submit" class="btn btn-primary">Calcular IMC</button>
                 </form>
             </div>
         </div>
 
-        {%if erros %}
-        {% for erro in erros%}
-        <div class="alert alert-danger" role="alert" >
-            {{erro}}
-        </div>
-        {%endfor%}
-        {%endif%}
-
-        {%if imc %}
+        {% if resultado %}
         <div class="card mt-4">
             <div class="card-header">Resultado</div>
             <div class="card-body">
-                <div class="alert alert-{{cor}} mb-0" role="alert">
-                    <p class="alert-heading"> olá, {{nome}} </p>
-                    <p class="mb-1">Seu IMC é <strong> {{'%.2f' % imc}} </strong></p>
-                    <p class="mb-0">Faixa: <strong> {{mensagem}} </strong></p>
+                <div class="alert alert-{{ resultado.cor }} mb-0" role="alert">
+                    <h4 class="alert-heading">{{ resultado.nome }}</h4>
+                    <p class="mb-1">Seu IMC é <strong>{{ "%.2f"|format(resultado.imc)|replace(".", ",") }}</strong></p>
+                    <p class="mb-0">Faixa: <strong>{{ resultado.faixa }}</strong></p>
                 </div>
             </div>
         </div>
-        {%endif%}
+        {% endif %}
     </div>
 </body>
 
