@@ -1,67 +1,82 @@
+# inicia o py
 from flask import Flask, render_template, request
-
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
-def pagina_inicial():
-    if request.method == 'GET':
-        return render_template('index.html')
-    
-    if request.method == 'POST':
-        nome = request.form['nome']
-        peso = request.form['peso']
-        altura = request.form['altura']
-        resultado = None
+# define a rota do index
+@app.route("/", methods=["GET", "POST"])
+def index():
+    nome = ""
+    peso = ""
+    altura = ""
+    erros = []
+    resultado = None #segurança
 
-        erros = []
-        if nome == '':
-            erros.append("campo nome obrigatório")
+    if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        peso = request.form.get("peso", "").strip()
+        altura = request.form.get("altura", "").strip()
 
-        if peso == '':
-            erros.append("campo peso obrigatório")
+        if nome == "":
+            erros.append("Informe o seu nome.")
 
+        peso_valor = None
+        if peso == "":
+            erros.append("Informe o peso.")
         else:
-            peso = float(peso)
-            if peso <= 0 or peso > 300:
-               erros.append("peso deve ser maior que 0 e até 300")
+            try:
+                peso_valor = float(peso)
+                if not 0 < peso_valor :
+                    erros.append("O peso deve ser maior que 0")
+            except ValueError:
+                erros.append("O peso deve ser um número válido.")
 
-
-        if altura == '':
-                erros.append("campo altura obrigatório")
+        altura_valor = None
+        if altura == "":
+            erros.append("Informe a altura.")
         else:
-            altura = float(altura)
-            if altura < 0.5 or altura > 2.5:
-                erros.append("altura deve ser entre 0,5 e 2,5M")       
+            try:
+                altura_valor = float(altura)
+                if not 0.5 <= altura_valor <= 2.5:
+                    erros.append("A altura deve estar entre 0,5 e 2,5 metros.")
+            except ValueError:
+                erros.append("A altura deve ser um número válido.")
 
-        if len(erros) == 0 :
+        if not erros:
 
-            altura2 = altura * altura
-            imc = round(peso / altura2, 2)
+            ## round para formatar para 2 casas decimais
+            imc = round(peso_valor / (altura_valor ** 2), 2)
 
-            if imc >= 30:
-                mensagem = "Obesidade"
-                cor = "danger"
-            elif imc >= 25 :
-                mensagem = "Sobrepeso"
-                cor = "warning"
-            elif imc >= 18.5 :
-                mensagem = "Peso normal"
-                cor = "success"
-            else :
-                mensagem = "Abaixo do peso"
+            if imc < 18.5:
+                faixa = "Abaixo do peso"
                 cor = "info"
+            elif imc < 25:
+                faixa = "Peso normal"
+                cor = "success"
+            elif imc < 30:
+                faixa = "Sobrepeso"
+                cor = "warning"
+            else:
+                faixa = "Obesidade"
+                cor = "danger"
 
-          #  resultado =  {"imc" : imc, "mensagem" : mensagem, "erros" : erros, "nome" : nome}
+            resultado = {"nome": nome, "imc": imc, "faixa": faixa, "cor": cor}
 
-            return render_template('index.html', imc = imc, mensagem = mensagem, nome = nome, cor = cor)
-    return render_template('index.html', erros = erros)
+    return render_template(
+        "index.html",
+        nome=nome,
+        peso=peso,
+        altura=altura,
+        erros=erros,
+        resultado=resultado,
+    )
 
+##/equipe
+@app.route("/equipe")
+def equipe():
+    
+    
+    return render_template("equipe.html")
 
-@app.route('/equipe')
-def contato():
-    return render_template('equipe.html')
-
-
-if __name__ == '__main__':
+## ultima coisa
+if __name__ == "__main__":
     app.run(debug=True)
-
